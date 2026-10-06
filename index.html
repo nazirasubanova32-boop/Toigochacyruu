@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Бакыт & Айбийке</title>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: #fdf8f4;
+      color: #4a3832;
+      overflow-x: hidden;
+    }
+
+    /* =========================
+       MUSIC BUTTON
+    ========================== */
+
+    .music-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+
+      width: 55px;
+      height: 55px;
+
+      border: none;
+      border-radius: 50%;
+
+      background: #8d655b;
+      color: white;
+
+      font-size: 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+
+      z-index: 9999;
+
+      box-shadow:
+        0 5px 20px rgba(0,0,0,0.25);
+
+      transition: 0.3s;
+    }
+
+    .music-button:active {
+      transform: scale(0.9);
+    }
+
+    .music-button.playing {
+      animation: musicRotate 3s linear infinite;
+    }
+
+    @keyframes musicRotate {
+
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+
+    }
+
+    .music-message {
+      position: fixed;
+
+      left: 50%;
+      bottom: 25px;
+
+      transform: translateX(-50%);
+
+      background: rgba(60,40,35,0.9);
+
+      color: white;
+
+      padding: 12px 22px;
+
+      border-radius: 30px;
+
+      font-size: 14px;
+
+      z-index: 9998;
+
+      display: none;
+
+      white-space: nowrap;
+    }
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero {
+      min-height: 100vh;
+
+      display: flex;
+      flex-direction: column;
+
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+
+      padding: 70px 20px 50px;
+
+      position: relative;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #fff,
+          #fdf8f4 65%,
+          #f5e8df
+        );
+    }
+
+    .small-title {
+      font-size: 17px;
+
+      letter-spacing: 4px;
+
+      text-transform: uppercase;
+
+      margin-bottom: 25px;
+
+      color: #94736a;
+    }
+
+    .hero h1 {
+
+      font-size: clamp(45px, 12vw, 90px);
+
+      font-weight: normal;
+
+      color: #705047;
+
+      line-height: 1.1;
+
+      margin-bottom: 25px;
+    }
+
+    .and {
+      font-size: 35px;
+
+      color: #b08b7f;
+
+      font-style: italic;
+    }
+
+    .hero-text {
+
+      font-size: 19px;
+
+      line-height: 1.8;
+
+      max-width: 500px;
+
+      color: #695650;
+
+      margin-bottom: 30px;
+    }
+
+    .date {
+
+      font-size: 30px;
+
+      color: #76534a;
+
+      margin-top: 10px;
+
+      letter-spacing: 2px;
+    }
+
+    .location {
+
+      margin-top: 15px;
+
+      font-size: 18px;
+
+      color: #80645b;
+    }
+
+    .scroll {
+
+      position: absolute;
+
+      bottom: 25px;
+
+      font-size: 13px;
+
+      letter-spacing: 2px;
+
+      color: #a1877e;
+    }
+
+    /* =========================
+       DECORATION
+    ========================== */
+
+    .line {
+
+      width: 100px;
+
+      height: 1px;
+
+      background: #c6a79c;
+
+      margin: 20px auto;
+    }
+
+    /* =========================
+       PHOTO SECTION
+    ========================== */
+
+    .photos {
+
+      padding: 70px 20px;
+
+      background: #fff;
+
+      text-align: center;
+    }
+
+    .section-title {
+
+      font-size: 34px;
+
+      font-weight: normal;
+
+      color: #76534a;
+
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+
+      font-size: 16px;
+
+      color: #967b72;
+
+      margin-bottom: 35px;
+    }
+
+    .photo-container {
+
+      max-width: 850px;
+
+      margin: auto;
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 20px;
+    }
+
+    .photo-card {
+
+      overflow: hidden;
+
+      border-radius: 20px;
+
+      box-shadow:
+        0 10px 35px rgba(80,50,40,0.15);
+
+      background: white;
+    }
+
+    .photo-card img {
+
+      width: 100%;
+
+      height: 500px;
+
+      object-fit: cover;
+
+      display: block;
+
+      transition: transform 0.5s;
+    }
+
+    .photo-card:hover img {
+
+      transform: scale(1.03);
+    }
+
+    /* =========================
+       INVITATION
+    ========================== */
+
+    .invitation {
+
+      padding: 80px 25px;
+
+      text-align: center;
+
+      background: #f8eee8;
+    }
+
+    .invitation-box {
+
+      max-width: 700px;
+
+      margin: auto;
+
+      padding: 50px 30px;
+
+      background: rgba(255,255,255,0.75);
+
+      border-radius: 25px;
+
+      box-shadow:
+        0 10px 40px rgba(100,70,60,0.1);
+    }
+
+    .invitation-box p {
+
+      font-size: 19px;
+
+      line-height: 2;
+
+      color: #665149;
+    }
+
+    /* =========================
+       DATE CARD
+    ========================== */
+
+    .date-section {
+
+      padding: 80px 20px;
+
+      text-align: center;
+
+      background: #fff;
+    }
+
+    .date-card {
+
+      max-width: 500px;
+
+      margin: auto;
+
+      border: 1px solid #d8c1b8;
+
+      padding: 40px 25px;
+
+      border-radius: 20px;
+
+      background: #fffaf7;
+    }
+
+    .date-number {
+
+      font-size: 70px;
+
+      color: #76534a;
+
+      line-height: 1;
+    }
+
+    .month {
+
+      font-size: 25px;
+
+      margin-top: 10px;
+
+      color: #8d6c62;
+    }
+
+    .city {
+
+      margin-top: 20px;
+
+      font-size: 18px;
+
+      color: #90776e;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+
+      padding: 60px 20px;
+
+      text-align: center;
+
+      background: #705047;
+
+      color: white;
+    }
+
+    footer h2 {
+
+      font-size: 35px;
+
+      font-weight: normal;
+
+      margin-bottom: 15px;
+    }
+
+    footer p {
+
+      font-size: 16px;
+
+      opacity: 0.9;
+
+      line-height: 1.7;
+    }
+
+    /* =========================
+       MOBILE
+    ========================== */
+
+    @media (max-width: 700px) {
+
+      .photo-container {
+
+        grid-template-columns: 1fr;
+      }
+
+      .photo-card img {
+
+        height: 450px;
+      }
+
+      .hero h1 {
+
+        font-size: 52px;
+      }
+
+      .hero-text {
+
+        font-size: 17px;
+      }
+
+      .invitation-box {
+
+        padding: 40px 20px;
+      }
+
+      .section-title {
+
+        font-size: 30px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =================================
+       МУЗЫКА
+  ================================== -->
+
+  <audio
+    id="weddingMusic"
+    preload="auto"
+    loop
+    playsinline
+  >
+
+    <source
+      src="./music_from_video.mp3"
+      type="audio/mpeg"
+    >
+
+  </audio>
+
+
+  <!-- МУЗЫКА БАСКЫЧЫ -->
+
+  <button
+    id="musicButton"
+    class="music-button"
+    aria-label="Музыканы күйгүзүү"
+  >
+    🎵
+  </button>
+
+
+  <div
+    id="musicMessage"
+    class="music-message"
+  >
+    Музыка ойнотулууда 🎵
+  </div>
+
+
+  <!-- =================================
+       БАШКЫ БЕТ
+  ================================== -->
+
+  <section class="hero">
+
+    <div class="small-title">
+      Тойго чакыруу
+    </div>
+
+
+    <h1>
+      Бакыт
+      <span class="and">&</span>
+      Айбийке
+    </h1>
+
+
+    <div class="line"></div>
+
+
+    <p class="hero-text">
+
+      Сүйүүбүздүн эң сонун күнүндө
+      сиздерди биздин кубанычыбызга
+      күбө болууга чакырабыз.
+
+    </p>
+
+
+    <div class="date">
+      30-октябрь
+    </div>
+
+
+    <div class="location">
+      📍 Ош шаары
+    </div>
+
+
+    <div class="scroll">
+      ↓ Төмөн жылдырыңыз ↓
+    </div>
+
+  </section>
+
+
+
+  <!-- =================================
+       СҮРӨТТӨР
+  ================================== -->
+
+  <section class="photos">
+
+    <h2 class="section-title">
+      Биздин өзгөчө күн
+    </h2>
+
+    <div class="line"></div>
+
+    <p class="section-subtitle">
+      Эсте каларлык көз ирмемдер
+    </p>
+
+
+    <div class="photo-container">
+
+
+      <!-- БИРИНЧИ СҮРӨТ -->
+
+      <div class="photo-card">
+
+        <img
+          src="./IMG_2805.jpeg"
+          alt="Бакыт жана Айбийке"
+        >
+
+      </div>
+
+
+      <!-- ЭКИНЧИ СҮРӨТ -->
+
+      <div class="photo-card">
+
+        <img
+          src="./IMG_2807.jpeg"
+          alt="Бакыт жана Айбийке"
+        >
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =================================
+       ЧАКЫРУУ
+  ================================== -->
+
+  <section class="invitation">
+
+    <div class="invitation-box">
+
+      <h2 class="section-title">
+        Урматтуу коноктор!
+      </h2>
+
+      <div class="line"></div>
+
+
+      <p>
+
+        Сиздерди биздин жашообуздагы
+        эң маанилүү жана бактылуу
+        күндөрдүн бирине —
+        үйлөнүү тоюбузга чакырабыз.
+
+        <br><br>
+
+        Бул өзгөчө күндө сиздердин
+        биз менен бирге болушуңуздар
+        биз үчүн чоң кубаныч.
+
+        <br><br>
+
+        Сиздерди чыдамсыздык менен
+        күтөбүз!
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =================================
+       ДАТА
+  ================================== -->
+
+  <section class="date-section">
+
+    <h2 class="section-title">
+      Той күнү
+    </h2>
+
+    <div class="line"></div>
+
+
+    <div class="date-card">
+
+      <div class="date-number">
+        30
+      </div>
+
+      <div class="month">
+        ОКТЯБРЬ
+      </div>
+
+      <div class="city">
+        📍 Ош шаары
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =================================
+       FOOTER
+  ================================== -->
+
+  <footer>
+
+    <h2>
+      Бакыт & Айбийке
+    </h2>
+
+    <p>
+      Сүйүү менен башталган
+      жаңы жашоого бирге кадам таштайбыз.
+    </p>
+
+    <br>
+
+    <p>
+      Сиздерди күтөбүз ❤️
+    </p>
+
+  </footer>
+
+
+
+  <!-- =================================
+       JAVASCRIPT
+  ================================== -->
+
+  <script>
+
+    const music =
+      document.getElementById("weddingMusic");
+
+    const musicButton =
+      document.getElementById("musicButton");
+
+    const musicMessage =
+      document.getElementById("musicMessage");
+
+
+    let playing = false;
+
+
+    /*
+      МУЗЫКАНЫ КҮЙГҮЗҮҮ / ӨЧҮРҮҮ
+    */
+
+    function startMusic() {
+
+      music.volume = 0.8;
+
+      music.play()
+        .then(function() {
+
+          playing = true;
+
+          musicButton.innerHTML = "🔊";
+
+          musicButton.classList.add("playing");
+
+          musicMessage.innerHTML =
+            "Музыка ойнотулууда 🎵";
+
+          musicMessage.style.display =
+            "block";
+
+
+          setTimeout(function() {
+
+            musicMessage.style.display =
+              "none";
+
+          }, 2000);
+
+        })
+
+        .catch(function(error) {
+
+          console.log(
+            "Music error:",
+            error
+          );
+
+          musicMessage.innerHTML =
+            "Музыканы кайра басыңыз 🎵";
+
+          musicMessage.style.display =
+            "block";
+
+        });
+
+    }
+
+
+    function stopMusic() {
+
+      music.pause();
+
+      playing = false;
+
+      musicButton.innerHTML = "🎵";
+
+      musicButton.classList.remove(
+        "playing"
+      );
+
+      musicMessage.style.display =
+        "none";
+
+    }
+
+
+    musicButton.addEventListener(
+      "click",
+      function() {
+
+        if (music.paused) {
+
+          startMusic();
+
+        } else {
+
+          stopMusic();
+
+        }
+
+      }
+    );
+
+
+    /*
+      САЙТ АЧЫЛГАНДА
+      АВТОМАТТЫК ОЙНОТУУГА АРАКЕТ КЫЛАТ.
+      
+      Эгер iPhone/Safari бөгөттөсө,
+      колдонуучу 🎵 басканда иштейт.
+    */
+
+    window.addEventListener(
+      "load",
+      function() {
+
+        music.volume = 0.8;
+
+        music.play()
+          .then(function() {
+
+            playing = true;
+
+            musicButton.innerHTML =
+              "🔊";
+
+            musicButton.classList.add(
+              "playing"
+            );
+
+          })
+          .catch(function() {
+
+            /*
+              iPhone autoplay'ду
+              бөгөттөсө эч нерсе болбойт.
+              🎵 баскычын басканда иштейт.
+            */
+
+            musicButton.innerHTML =
+              "🎵";
+
+          });
+
+      }
+    );
+
+
+  </script>
+
+
+</body>
+</html>
